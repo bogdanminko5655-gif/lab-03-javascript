@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f7fd">
+  <meta name="description" content="Інтерактивний тренажер таблиці множення: 10 завдань, перевірка відповіді з однієї спроби, оцінка результатів та особиста статистика.">
+  <title>Множимо! — тренажер таблиці множення</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="#training" id="brandLink" aria-label="Множимо! — на головну">
+          <span class="brand-mark" aria-hidden="true">×</span>
+          <span class="brand-name">множимо<span class="brand-dot">.</span></span>
+          <span class="brand-tagline">математика без нудьги</span>
+        </a>
+        <nav class="top-nav" aria-label="Основна навігація">
+          <button class="nav-button is-active" type="button" data-view="training" aria-current="page">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-7 9 7v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
+            <span>Тренування</span>
+          </button>
+          <button class="nav-button" type="button" data-view="statistics">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20V7"/></svg>
+            <span>Статистика</span>
+          </button>
+          <button class="nav-button" type="button" data-view="about">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.7 2.7 0 0 1 5.2 1c0 2-2.7 2-2.7 4M12 17.5h.01"/></svg>
+            <span>Як грати</span>
+          </button>
+        </nav>
+        <button class="theme-button" type="button" id="themeToggle" aria-label="Увімкнути темну тему" aria-pressed="false" title="Змінити тему">
+          <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.7A9 9 0 0 1 9.3 3.5a9 9 0 1 0 11.2 11.2z"/></svg>
+          <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="main-container">
+      <section class="intro" aria-label="Про тренажер">
+        <div class="intro-copy">
+          <span class="eyebrow"><span class="eyebrow-pulse"></span> ТВОЯ ЩОДЕННА МАТЕМАТИКА</span>
+          <h1>Множення — це <span class="headline-accent">легко!</span></h1>
+          <p>10 коротких завдань, одна спроба на відповідь і результат, яким можна пишатися.</p>
+        </div>
+        <div class="intro-art" aria-hidden="true">
+          <span class="art-spark art-spark-one">✳</span>
+          <div class="art-blob"><span>6 <small>×</small> 7</span><strong>= 42</strong></div>
+          <span class="art-spark art-spark-two">+</span>
+          <span class="art-circle"></span>
+        </div>
+      </section>
+
+      <section class="view" id="viewTraining" aria-label="Тренування">
+        <div class="dashboard-grid">
+          <aside class="panel progress-panel" aria-label="Прогрес тренування">
+            <div class="panel-heading">
+              <h2>Мій прогрес</h2>
+              <span class="tiny-pill">LIVE</span>
+            </div>
+            <div class="progress-circle" id="scoreRing" style="--progress: 0%">
+              <div class="progress-circle-inner">
+                <strong id="scorePercent">0%</strong>
+                <span>точність</span>
+              </div>
+            </div>
+            <p class="progress-description" id="overallScore">Загальний рахунок: 0% (0 правильних із 0)</p>
+            <div class="stat-list">
+              <div class="stat-line"><span class="stat-icon stat-icon-green">✓</span><span>Правильно</span><strong id="correctCount">0</strong></div>
+              <div class="stat-line"><span class="stat-icon stat-icon-red">×</span><span>Помилок</span><strong id="wrongCount">0</strong></div>
+              <div class="stat-line"><span class="stat-icon stat-icon-blue">#</span><span>Відповідей</span><strong id="answeredCount">0/10</strong></div>
+            </div>
+            <div class="personal-best">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v4a4 4 0 0 1-8 0zM8 6H5v2a4 4 0 0 0 4 4m7-6h3v2a4 4 0 0 1-4 4M12 12v5m-4 4h8m-4-4a4 4 0 0 0-4 4h8a4 4 0 0 0-4-4z"/></svg>
+              <div><span>Особистий рекорд</span><strong id="personalBest">—</strong></div>
+            </div>
+          </aside>
+
+          <section class="panel exercise-panel" aria-label="Поточне завдання">
+            <div id="activeExercise">
+              <div class="exercise-header">
+                <div>
+                  <span class="section-kicker">ЧАС ПОТРЕНУВАТИСЯ</span>
+                  <h2 id="questionCounter">Завдання 1 із 10</h2>
+                </div>
+                <span class="question-tag" id="tableBadge">Різні таблиці</span>
+              </div>
+              <div class="segment-progress" id="segmentProgress" aria-label="Виконано 0 із 10 завдань" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"></div>
+              <div class="question-box">
+                <div class="question-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 8h6M9 12h1m4 0h1m-6 4h1m4 0h1"/></svg>
+                </div>
+                <div>
+                  <span class="question-label">Обчисли значення</span>
+                  <p id="questionText" class="question-text" tabindex="-1">3 × 4 = ?</p>
+                </div>
+                <span class="question-decoration" aria-hidden="true">✦</span>
+              </div>
+              <fieldset class="answers-fieldset" id="answersFieldset">
+                <legend>Обери правильну відповідь</legend>
+                <div class="answer-grid" id="answerOptions"></div>
+              </fieldset>
+              <div class="feedback" id="feedback" role="status" aria-live="polite">
+                <span class="feedback-icon" id="feedbackIcon" aria-hidden="true">i</span>
+                <div><strong id="feedbackTitle">Одна відповідь — одна спроба</strong><p id="feedbackText">Обери варіант. Після вибору змінити його вже не можна.</p></div>
+              </div>
+              <div class="exercise-footer">
+                <span class="keyboard-hint"><kbd>1</kbd>–<kbd>4</kbd> вибір · <kbd>Enter</kbd> далі</span>
+                <button class="button button-primary" id="nextButton" type="button" disabled>
+                  <span>Наступне завдання</span>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="finish-screen" id="finishScreen" hidden>
+              <div class="finish-medal" aria-hidden="true">★</div>
+              <span class="section-kicker">ТРЕНУВАННЯ ЗАВЕРШЕНО</span>
+              <h2 id="finishHeading">Чудова робота!</h2>
+              <p class="finish-score" id="finishScore">80%</p>
+              <p class="finish-description" id="finishDescription">Ти правильно відповів на 8 із 10 запитань.</p>
+              <div class="finish-metrics"><div><span>Правильних</span><strong id="finishCorrect">8</strong></div><div><span>Помилок</span><strong id="finishWrong">2</strong></div><div><span>Усього</span><strong>10</strong></div></div>
+              <div id="mistakesReview" class="mistakes-review"></div>
+              <button class="button button-primary finish-retry" type="button" id="retryButton">Спробувати ще раз <span aria-hidden="true">↗</span></button>
+            </div>
+          </section>
+
+          <aside class="panel tips-panel" aria-label="Налаштування та поради">
+            <div class="panel-heading"><h2>Мій тренажер</h2><span class="settings-icon" aria-hidden="true">⚙</span></div>
+            <label class="select-label" for="tableSelect">Яку таблицю тренуємо?</label>
+            <div class="select-wrapper">
+              <select id="tableSelect" name="table">
+                <option value="all">Усі таблиці</option>
+                <option value="2">Таблиця на 2</option>
+                <option value="3">Таблиця на 3</option>
+                <option value="4">Таблиця на 4</option>
+                <option value="5">Таблиця на 5</option>
+                <option value="6">Таблиця на 6</option>
+                <option value="7">Таблиця на 7</option>
+                <option value="8">Таблиця на 8</option>
+                <option value="9">Таблиця на 9</option>
+              </select>
+            </div>
+            <button class="button button-secondary new-quiz-button" type="button" id="newQuizButton">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M5.7 9A7 7 0 0 1 18 7l2 5M4 12l2 5a7 7 0 0 0 12.3-2"/></svg>
+              Почати нову спробу
+            </button>
+            <div class="tips-divider"></div>
+            <div class="tip-title"><span aria-hidden="true">✦</span> Маленька підказка</div>
+            <p class="tip-text" id="dailyTip">Якщо не впевнений у відповіді, поміняй множники місцями. Від цього добуток не зміниться!</p>
+            <div class="tip-art" aria-hidden="true"><div class="art-notebook"><span>2 × 6 = 12</span><span>6 × 2 = 12</span><div class="notebook-line"></div><strong>Ти зможеш!</strong></div><span class="art-pencil">✎</span></div>
+            <div class="rule-note"><span aria-hidden="true">🔒</span><p>На кожне запитання є <strong>лише одна спроба</strong>. Результат зберігається автоматично.</p></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" id="viewStatistics" aria-label="Статистика" hidden>
+        <div class="page-panel panel">
+          <div class="page-panel-heading"><div><span class="section-kicker">ОСОБИСТІ ДОСЯГНЕННЯ</span><h2>Статистика тренувань</h2><p>Показники зберігаються в цьому браузері.</p></div><button class="button button-outline" id="clearStatsButton" type="button">Очистити історію</button></div>
+          <div class="history-summary"><div class="history-tile"><span>Тренувань</span><strong id="historySessions">0</strong></div><div class="history-tile"><span>Рекорд</span><strong id="historyBest">—</strong></div><div class="history-tile"><span>Середня точність</span><strong id="historyAverage">—</strong></div><div class="history-tile"><span>Правильних відповідей</span><strong id="historyTotalCorrect">0</strong></div></div>
+          <h3 class="history-heading">Останні результати</h3>
+          <div id="historyList" class="history-list"><p class="empty-state">Поки що немає завершених тренувань.</p></div>
+        </div>
+      </section>
+
+      <section class="view" id="viewAbout" aria-label="Як грати" hidden>
+        <div class="page-panel panel">
+          <span class="section-kicker">ПРАВИЛА ТРЕНАЖЕРА</span><h2 class="about-heading">Як це працює?</h2>
+          <div class="how-grid"><article class="how-card"><span>01</span><h3>Обери таблицю</h3><p>Тренуй усі множники або зосередься на конкретній таблиці від 2 до 9.</p></article><article class="how-card"><span>02</span><h3>Дай відповідь</h3><p>У кожному з 10 завдань є чотири варіанти. Натисни на один — повторного вибору немає.</p></article><article class="how-card"><span>03</span><h3>Дізнайся результат</h3><p>Після відповіді з'явиться перевірка. Наприкінці отримаєш підсумок і зможеш переглянути помилки.</p></article></div>
+          <div class="about-bottom"><div><h3>Керування з клавіатури</h3><p>Цифри <kbd>1</kbd>, <kbd>2</kbd>, <kbd>3</kbd>, <kbd>4</kbd> — вибір відповіді, <kbd>Enter</kbd> — перехід далі після перевірки.</p></div><button class="button button-primary" type="button" id="goTrainButton">Перейти до тренування →</button></div>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer"><span>множимо<span class="brand-dot">.</span> <span class="footer-muted">Маленькі кроки — великі результати.</span></span><span>Практична робота · Варіант 7 · HTML / CSS / JavaScript</span></footer>
+  </div>
+  <noscript><div class="noscript-warning">Для роботи тренажера увімкніть JavaScript у браузері.</div></noscript>
+</body>
+</html>
